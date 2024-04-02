@@ -100,6 +100,7 @@ void leer_consola(t_log* logger)
 	while (strlen(leido)!=0)
 	{
 		log_info(logger,leido);
+		free(leido);
 		leido = readline("> ");
 	}
 
@@ -119,13 +120,15 @@ void paquete(int conexion)
 
 	while (strlen(leido)!=0)
 	{
-		agregar_a_paquete(paquete,leido,strlen(leido)+1);
+		agregar_a_paquete(paquete,leido,strlen(leido) + 1);
+		free(leido);
+		leido = readline("> ");
 	}
-
+	
+	free(leido);
 	enviar_paquete(paquete,conexion);
 
 	// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
-	free(leido);
 	eliminar_paquete(paquete);
 }
 
@@ -133,4 +136,5 @@ void terminar_programa(int conexion, t_log* logger, t_config* config)
 {
 	log_destroy(logger);
 	config_destroy(config);
+	liberar_conexion(conexion);
 }
